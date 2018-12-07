@@ -15,10 +15,21 @@ logs: Log [];
 constructor(private logService: LogService) { }
 
 ngOnInit() {
-  this.logs = this.logService.getlogs();
+  // sync data
+  // this.logs = this.logService.getlogs();
+
+  // Async
+  this.logService.getlogs()
+  .subscribe(logs => {
+    this.logs = logs;
+  })
 }
 onSelect(log: Log) {
 console.log(log);
 this.logService.setFormLog(log);
 }
+onDelete(log: Log) {
+  this.logService.deleteLog(log);
+}
+
 }
