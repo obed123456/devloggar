@@ -1,7 +1,9 @@
 <ul class="list-group">
-  <li  *ngFor="let log of logs" class="list-group-item d-flex justify-content-between align-items-center" style="line-height:1rem;">
-    <a (click)="onSelect(log)"href="#" class="col-7">{{log.text}}</a>
-    <span class="log-date col-3">{{log.date | date: 'short'}}</span>
-    <i (click)="onDelete(log)" class="fa fa-remove col-1"></i>
+  <li *ngFor="let log of logs" class="list-group-item d-flex justify-content-between align-items-center" style="line-height: 0.5;">
+    <a (click)="onSelect(log)" class="col-sm-7" href="#">{{log.text}}</a>
+    <span class="log-date col-sm-4 text-secondary">{{log.date | date:short}}</span>
+    <i (click)="onClick" class="fa fa-remove col-sm-1 pr-0"></i>
   </li>
 </ul>
+<p>test</p>
+
