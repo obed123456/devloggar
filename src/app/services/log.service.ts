@@ -1,32 +1,34 @@
 import { Injectable } from '@angular/core';
-import { Log } from '../models/log';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
-import {  BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Observable } from 'rxjs/Observable';
+import { of } from 'rxjs/observable/of';
 
-import { Observable } from 'rxjs/Observable'; 
-import { of } from 'rxjs/Observable/of'
+import { Log } from '../models/Log';
+import { CurrencyPipe } from '@angular/common';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class LogService {
- logs: Log[];
+  logs: Log[];
 
- private logSource =  new BehaviorSubject<Log>({id: null, text:null, date:null}); 
+  private logSource = new BehaviorSubject<Log>({id: null, text: null, date: null});
+  selectedLog = this.logSource.asObservable();
 
- selectedLog = this.logSource.asObservable();
+  private stateSource = new BehaviorSubject<boolean>(true); 
+  stateClear = this.stateSource.asObservable();
 
   constructor() { 
-    this.logs = [
-      { id: '1', text : 'Generated components', date: new Date('12/03/2017 12:54:23')},
-      { id: '2', text : 'Added Generated components', date: new Date('12/04/2017 12:54:23')},
-      { id: '2', text : 'Added log components', date: new Date('12/05/2017 12:54:23')}
-    ]
+    // this.logs = [
+    //   {id: '1', text: 'Generated components', date: new Date('12/26/2017 12:54:23')},
+    //   {id: '2', text: 'Added Bootstrap', date: new Date('12/27/2017 9:33:13')},
+    //   {id: '3', text: 'Added logs component', date: new Date('12/27/2017 12:00:23')}
+    // ]
+    this.logs = [];
   }
 
-  getlogs(): Observable<Log[]> {
+  getLogs(): Observable<Log[]> {
     return of(this.logs);
-    }
+  }
 
   setFormLog(log: Log) {
     this.logSource.next(log);
@@ -36,23 +38,25 @@ export class LogService {
     this.logs.unshift(log);
   }
 
-  updateLog(log: Log){
-    //delete old log
-    this.logs.forEach((curr, index) =>{
-      if(log.id == curr.id){
-        this.logs.splice(index, 1);
+  updateLog(log:  Log) {
+    this.logs.forEach((cur, index) => {
+      if(log.id == cur.id){
+        this.logs.splice(index , 1);
       }
-    }); 
-    //add new log.
+    });
     this.logs.unshift(log);
   }
 
-  deleteLog(log: Log){
-    this.logs.forEach((curr, index) =>{
+  deletLog(log: Log){
+    this.logs.forEach((curr, index)=>{
       if(log.id == curr.id){
         this.logs.splice(index, 1);
       }
-    }); 
+    });
   }
 
-} 
+  clearState(){
+      this.stateSource.next(true);
+  }
+
+}

@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 
-import { LogService  } from '../../services/log.service';
-import { BoundElementProperty } from '@angular/compiler';
-import { timingSafeEqual } from 'crypto';
+import { LogService } from '../../services/log.service';
+
+import { Log } from '../../models/Log';
 
 @Component({
   selector: 'app-log-form',
@@ -10,46 +10,63 @@ import { timingSafeEqual } from 'crypto';
   styleUrls: ['./log-form.component.css']
 })
 export class LogFormComponent implements OnInit {
-  id: string; 
-  text: string; 
-  date: any; 
+  id: string;
+  text: string;
+  date: any;
 
-  isNew :boolean = true;
+  isNew: boolean = true; 
 
   constructor(private logService: LogService) { }
 
   ngOnInit() {
-    this.logService.selectedLog
-    .subscribe(log => {
-      if(log.id !== null){
-        this.isNew = false;
-        this.id = log.id; 
-        this.text = log.text; 
+    // Subscribe to the selectedLog observable
+    this.logService.selectedLog.subscribe(log => {
+      if(log.id !== null) {
+        this.isNew = false; 
+        this.id = log.id;
+        this.text = log.text;
         this.date = log.date;
       }
-    })
+    });
   }
-  onSubmit() {
-    //Check if new log
-    if(this.isNew) {
-      //create a new log
+
+  onSubmit(){
+    //check if log is new
+    if(this.isNew){
+      //create new Log
       const newLog = {
         id: this.generateId(),
         text: this.text, 
-        date:new Date()
+        date: new Date()
       }
+      // Add log 
       this.logService.addLog(newLog);
-    } else {
+    }else {
       //create log to be updated
       const updLog = {
         id: this.id, 
         text: this.text, 
         date: new Date()
       }
-      //update log
-      //this.logService.updateLog(updLog);
+      //updatelog 
+      this.logService.updateLog(updLog);
     }
+
+    //clear state
+
+    this.clearState();
   }
+
+  //after form submittion empty text field
+  clearState(){
+    this.isNew = true; 
+    this.id = '';
+    this.text = '';
+    this.date = '';
+    this.logService.clearState();
+  }
+
+
 
   generateId() {
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {

@@ -14,7 +14,7 @@ import { LogService } from './services/log.service';
     AppComponent,
     NavbarComponent,
     LogFormComponent,
-    LogsComponent,
+    LogsComponent
   ],
   imports: [
     BrowserModule,
